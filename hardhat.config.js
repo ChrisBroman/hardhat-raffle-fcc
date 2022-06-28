@@ -22,7 +22,7 @@ module.exports = {
             chainId: 4,
             blockConfirmations: 6,
             url: RINKEBY_RPC_URL,
-            accounts: PRIVATE_KEY,
+            accounts: [PRIVATE_KEY],
         },
     },
     solidity: "0.8.7",
