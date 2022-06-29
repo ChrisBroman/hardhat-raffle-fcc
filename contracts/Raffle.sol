@@ -99,6 +99,7 @@ contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
         bool hasPlayers = (s_players.length > 0);
         bool hasBalance = (address(this).balance > i_entranceFee);
         upkeepNeeded = (isOpen && timePassed && hasPlayers && hasBalance);
+        return (upkeepNeeded, "0x0");
     }
 
     function performUpkeep(
