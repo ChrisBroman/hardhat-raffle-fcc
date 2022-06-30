@@ -65,6 +65,8 @@ contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
     }
 
     function enterRaffle() public payable {
+        // require(msg.value >= i_entranceFee, "Not enough value sent");
+        // require(s_raffleState == RaffleState.OPEN, "Raffle is not open");
         if (msg.value < i_entranceFee) {
             revert Raffle__NotEnoughETHEntered();
         }
@@ -72,6 +74,8 @@ contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
             revert Raffle__NotOpen();
         }
         s_players.push(payable(msg.sender));
+        // Emit an event when we update a dynamic array or mapping
+        // Named events with the function name reversed
         emit RaffleEnter(msg.sender);
     }
 
@@ -85,25 +89,26 @@ contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
      * 4. The lottery should be in an "open" state.
      */
     function checkUpkeep(
-        bytes memory /*checkData*/
+        bytes memory /* checkData */
     )
         public
+        view
         override
         returns (
             bool upkeepNeeded,
-            bytes memory /*performData*/
+            bytes memory /* performData */
         )
     {
-        bool isOpen = (RaffleState.OPEN == s_raffleState);
-        bool timePassed = ((block.timestamp - s_lastTimeStamp) < i_interval);
-        bool hasPlayers = (s_players.length > 0);
-        bool hasBalance = (address(this).balance > i_entranceFee);
-        upkeepNeeded = (isOpen && timePassed && hasPlayers && hasBalance);
-        return (upkeepNeeded, "0x0");
+        bool isOpen = RaffleState.OPEN == s_raffleState;
+        bool timePassed = ((block.timestamp - s_lastTimeStamp) > i_interval);
+        bool hasPlayers = s_players.length > 0;
+        bool hasBalance = address(this).balance > 0;
+        upkeepNeeded = (timePassed && isOpen && hasBalance && hasPlayers);
+        return (upkeepNeeded, "0x0"); // can we comment this out?
     }
 
     function performUpkeep(
-        bytes calldata /*performData*/
+        bytes calldata /* performData */
     ) external override {
         (bool upkeepNeeded, ) = checkUpkeep("");
         if (!upkeepNeeded) {
