@@ -33,6 +33,9 @@ module.exports = {
         //coinmarketcap: COINMARKET_API_KEY,
         token: "ETH",
     },
+    etherscan: {
+        apiKey: ETHERSCAN_API_KEY,
+    },
     solidity: "0.8.7",
     namedAccounts: {
         deployer: {
@@ -43,6 +46,6 @@ module.exports = {
         },
     },
     mocha: {
-        timeout: 300000, //200 seconds
+        timeout: 100000000,
     },
 };
