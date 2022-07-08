@@ -4,3 +4,4 @@ cache
 notes
 coverage
 deployments
+.env
